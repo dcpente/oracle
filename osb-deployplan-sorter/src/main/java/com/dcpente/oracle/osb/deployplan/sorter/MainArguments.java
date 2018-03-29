@@ -200,14 +200,14 @@ public class MainArguments {
 		Option version = new Option(OP_VERSION, "print the version information and exit");
 		options.addOption(version);
 		
-		Option src = new Option(OP_SRC, true, "TODO, input XML file, deploy plan to sort");
+		Option src = new Option(OP_SRC, true, "input XML file, deploy plan to sort");
 		options.addOption(src);
-		Option dst = new Option(OP_DST, true, "TODO, output XML file, deploy plan after sort");
+		Option dst = new Option(OP_DST, true, "output XML file, deploy plan after sort");
 		options.addOption(dst);
 		Option cmp = new Option(OP_CMP, true, "TODO, XML deploy plan file, thats your target to compare");
 		options.addOption(cmp);
 
-		Option ovewrite = new Option(OP_OVERWRITE, false, "TODO, flag to overwrite file if exist");
+		Option ovewrite = new Option(OP_OVERWRITE, false, "flag to overwrite file if exist");
 		options.addOption(ovewrite);
 		
 		OptionGroup log = new OptionGroup();
@@ -232,20 +232,20 @@ public class MainArguments {
 				return;
 			Set<String> hsArgs = new HashSet<String>(Arrays.asList(args));
 
-			boolean quiet = hsArgs.contains("-" + OP_QUIET);
+			boolean quiet = hsArgs.contains("-" + OP_QUIET[0]) || hsArgs.contains("-" + OP_QUIET[1]);
 			if (quiet) {
 				Configurator.setRootLevel(Level.OFF);
 				Configurator.setAllLevels("com.dcpente.oracle.osb.deployplan.sorter", Level.OFF);
 				return;
 			}
 
-			boolean verbose = hsArgs.contains("-" + OP_VERBOSE);
+			boolean verbose = hsArgs.contains("-" + OP_VERBOSE[0]) || hsArgs.contains("-" + OP_VERBOSE[1]);
 			if (verbose) {
 				Configurator.setAllLevels("com.dcpente.oracle.osb.deployplan.sorter", Level.ALL);
 				return;
 			}
 
-			boolean debug = hsArgs.contains("-" + OP_DEBUG);
+			boolean debug = hsArgs.contains("-" + OP_DEBUG[0]) || hsArgs.contains("-" + OP_DEBUG[1]);
 			if (debug) {
 				Configurator.setAllLevels("com.dcpente.oracle.osb.deployplan.sorter", Level.DEBUG);
 				return;
