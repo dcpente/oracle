@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.nio.file.FileAlreadyExistsException;
 import java.security.CodeSource;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class MainArguments {
 	// Log option: verbose console log
 	private final static String[] OP_VERBOSE = { "v", "verbose" };
 	// Log option: default console log
-	private final static String OP_DEFAULT = "default";
+//	private final static String OP_DEFAULT = "default";
 
 	// Options defined for this JAR
 	private Options options = null;
@@ -176,7 +177,14 @@ public class MainArguments {
 	}
 
 	private static void printHelp(Options options) {
-		new HelpFormatter().printHelp(getJarName(), HELP_HEADER, options, HELP_FOOTER, true);
+		HelpFormatter help = new HelpFormatter();
+		help.setOptionComparator(new Comparator<Option>() {
+		    private static final String OPTS_ORDER = "abcdef"; // short option names
+		    public int compare(Option o1, Option o2) {
+		        return OPTS_ORDER.indexOf(o1.getOpt()) - OPTS_ORDER.indexOf(o2.getOpt());
+		    }
+		});
+		help.printHelp(getJarName(), HELP_HEADER, options, HELP_FOOTER, true);
 	}
 
 	private static String getJarName() {
@@ -185,18 +193,22 @@ public class MainArguments {
 	}
 
 	private static Options createOptions() {
+		Options options = new Options();
 		
-		OptionGroup input = new OptionGroup();
+		Option help = new Option(OP_HELP[0], OP_HELP[1], false, "print this message");
+		options.addOption(help);
+		Option version = new Option(OP_VERSION, "print the version information and exit");
+		options.addOption(version);
 		
 		Option src = new Option(OP_SRC, true, "TODO, input XML file, deploy plan to sort");
-		input.addOption(src);
+		options.addOption(src);
 		Option dst = new Option(OP_DST, true, "TODO, output XML file, deploy plan after sort");
-		input.addOption(dst);
+		options.addOption(dst);
 		Option cmp = new Option(OP_CMP, true, "TODO, XML deploy plan file, thats your target to compare");
-		input.addOption(cmp);
+		options.addOption(cmp);
 
 		Option ovewrite = new Option(OP_OVERWRITE, false, "TODO, flag to overwrite file if exist");
-		input.addOption(ovewrite);
+		options.addOption(ovewrite);
 		
 		OptionGroup log = new OptionGroup();
 
@@ -208,20 +220,9 @@ public class MainArguments {
 		log.addOption(debug);
 		Option verbose = new Option(OP_VERBOSE[0], OP_VERBOSE[1], false, "be extra verbose");
 		log.addOption(verbose);
-
-		OptionGroup helpGroup = new OptionGroup();
 		
-		Option help = new Option(OP_HELP[0], OP_HELP[1], false, "print this message");
-		helpGroup.addOption(help);
-		Option version = new Option(OP_VERSION, "print the version information and exit");
-		helpGroup.addOption(version);
-
-		Options options = new Options();
 		options.addOptionGroup(log);
-		options.addOptionGroup(helpGroup);
-		options.addOptionGroup(input);
-		
-		
+
 		return options;
 	}
 
