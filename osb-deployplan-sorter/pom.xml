@@ -4,7 +4,7 @@
 
 	<groupId>com.github.dcpente.oracle</groupId>
 	<artifactId>osb-deployplan-sorter</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 
 	<name>Archetype - osb-deployplan-sorter</name>
 	<url>https://www.github.com/dcpente/oracle/osb-deployplan-sorter</url>
