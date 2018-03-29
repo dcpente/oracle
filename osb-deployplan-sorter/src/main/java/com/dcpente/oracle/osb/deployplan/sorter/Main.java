@@ -8,6 +8,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.dcpente.oracle.osb.deployplan.sorter.facade.SortFacade;
+
 public class Main {
 
 	private final static Logger log = LogManager.getLogger(Main.class);
@@ -44,24 +46,22 @@ public class Main {
 			return;
 		}
 
-
-		log.error("test error");
-		log.info("Test info");
-		log.debug("Test debug");
-		log.trace("Test trace");
-
 		if (mArgs.isHelp()) {
 			mArgs.printHelp();
-			return;
 		}
 		
 		if (mArgs.isVersion()) {
 			Package objPackage = Main.class.getPackage();
 			System.out.println("Package name: " + objPackage.getImplementationTitle());
 			System.out.println("Package version: " + objPackage.getImplementationVersion());
+		}
+		
+		if (mArgs.isHelp() || mArgs.isVersion()) {
 			return;
 		}
-
+		
+		SortFacade operation = new SortFacade(mArgs);
+		operation.run();
 	}
 
 }

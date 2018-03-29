@@ -52,7 +52,7 @@ public class MainArguments {
 	// Log option: verbose console log
 	private final static String[] OP_VERBOSE = { "v", "verbose" };
 	// Log option: default console log
-//	private final static String OP_DEFAULT = "default";
+	// private final static String OP_DEFAULT = "default";
 
 	// Options defined for this JAR
 	private Options options = null;
@@ -135,6 +135,22 @@ public class MainArguments {
 		this.version = version;
 	}
 
+	public String getCompareSrcFile() {
+		String file = getDestinationFile();
+		if (!file.contains("."))
+			return file + ".from.xml";
+		int idxLastDot = file.lastIndexOf('.');
+		return String.format("%s.from.%s", file.substring(0, idxLastDot), file.substring(idxLastDot + 1));
+	}
+
+	public String getCompareDstFile() {
+		String file = getDestinationFile();
+		if (!file.contains("."))
+			return file + ".to.xml";
+		int idxLastDot = file.lastIndexOf('.');
+		return String.format("%s.to.%s", file.substring(0, idxLastDot), file.substring(idxLastDot + 1));
+	}
+
 	public void compile() throws ParseException, FileNotFoundException, FileAlreadyExistsException,
 			IllegalArgumentException, SecurityException {
 
@@ -156,12 +172,12 @@ public class MainArguments {
 		setDestinationFile(line.getOptionValue(OP_DST));
 		setCompareFile(line.getOptionValue(OP_CMP));
 		setOverwrite(line.hasOption(OP_OVERWRITE));
-		
+
 		if (getSourceFile() == null && getDestinationFile() == null) {
 			setHelp(true);
 			return;
 		}
-		
+
 		FileCheckUtil.mandatoryFileExists(getSourceFile(), "source_file");
 		if (getCompareFile() != null)
 			FileCheckUtil.mandatoryFileExists(getCompareFile(), "comparer_file");
@@ -179,10 +195,11 @@ public class MainArguments {
 	private static void printHelp(Options options) {
 		HelpFormatter help = new HelpFormatter();
 		help.setOptionComparator(new Comparator<Option>() {
-		    private static final String OPTS_ORDER = "abcdef"; // short option names
-		    public int compare(Option o1, Option o2) {
-		        return OPTS_ORDER.indexOf(o1.getOpt()) - OPTS_ORDER.indexOf(o2.getOpt());
-		    }
+			private static final String OPTS_ORDER = "abcdef"; // short option names
+
+			public int compare(Option o1, Option o2) {
+				return OPTS_ORDER.indexOf(o1.getOpt()) - OPTS_ORDER.indexOf(o2.getOpt());
+			}
 		});
 		help.printHelp(getJarName(), HELP_HEADER, options, HELP_FOOTER, true);
 	}
@@ -194,33 +211,34 @@ public class MainArguments {
 
 	private static Options createOptions() {
 		Options options = new Options();
-		
+
 		Option help = new Option(OP_HELP[0], OP_HELP[1], false, "print this message");
 		options.addOption(help);
 		Option version = new Option(OP_VERSION, "print the version information and exit");
 		options.addOption(version);
-		
+
 		Option src = new Option(OP_SRC, true, "input XML file, deploy plan to sort");
 		options.addOption(src);
 		Option dst = new Option(OP_DST, true, "output XML file, deploy plan after sort");
 		options.addOption(dst);
-		Option cmp = new Option(OP_CMP, true, "TODO, XML deploy plan file, thats your target to compare");
+		Option cmp = new Option(OP_CMP, true, "IN PROGRESS, XML deploy plan file, thats your target to compare");
 		options.addOption(cmp);
 
 		Option ovewrite = new Option(OP_OVERWRITE, false, "flag to overwrite file if exist");
 		options.addOption(ovewrite);
-		
+
 		OptionGroup log = new OptionGroup();
 
 		Option quiet = new Option(OP_QUIET[0], OP_QUIET[1], false, "disable output console");
 		log.addOption(quiet);
-//		Option defaultLog = new Option(OP_DEFAULT, "print default information to console");
-//		log.addOption(defaultLog);
+		// Option defaultLog = new Option(OP_DEFAULT, "print default information to
+		// console");
+		// log.addOption(defaultLog);
 		Option debug = new Option(OP_DEBUG[0], OP_DEBUG[1], false, "print debugging information");
 		log.addOption(debug);
 		Option verbose = new Option(OP_VERBOSE[0], OP_VERBOSE[1], false, "be extra verbose");
 		log.addOption(verbose);
-		
+
 		options.addOptionGroup(log);
 
 		return options;
